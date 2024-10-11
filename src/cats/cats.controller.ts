@@ -4,10 +4,12 @@ import { CatsService } from './cats.service';
 
 
 
-
+//cats.controller.ts
 @Controller('cats')
 export class CatsController {
-    constructor(private readonly catsService: CatsService) {}
+    constructor(private readonly catsService: CatsService) {
+
+    }
 
 
     @Post()
@@ -16,14 +18,14 @@ export class CatsController {
     }
   
     @Get()
-  findAll() {
+   findAll() {
     return this.catsService.findAll();
-  }
+   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.catsService.findOne(Number(id));
-  }
+    @Get(':id')
+    findOne(@Param('id') id: string) {
+        return this.catsService.findOne(Number(id));
+    }
 
   @Put(':id')
   update(@Param('id') id: string, @Body() updateCatDto: UpdateCatDto) {

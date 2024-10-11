@@ -1,17 +1,17 @@
 export class CreateCatDto {
     name: string;
-    age: number;
-    breed: string;
+    description: number;
+    actions: string;
   }
   
 export class UpdateCatDto {
   name?: string;
-  age?: number;
-  breed?: string;
+  description?: number;
+  actions?: string;
   }
 export class ListAllEntities {
     name: string;
-    age: number;
-    breed: string;
+    description: number;
+    actions: string;
     limit: any;
   }

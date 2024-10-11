@@ -2,18 +2,19 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { Cat } from './interfaces/cat.interface';
 import { CreateCatDto, UpdateCatDto } from './dto/create-cat.dto';
 
+//cats.services.ts
 @Injectable()
 export class CatsService {
-  private readonly cats: Cat[] = [  { id: 1, name: 'Whiskers', age: 2, breed: 'Siamese' },
-    { id: 2, name: 'Tom', age: 3, breed: 'Persian' },
-    { id: 3, name: 'Garfield', age: 5, breed: 'Tabby' },
-    { id: 4, name: 'Bella', age: 1, breed: 'Maine Coon' },
-    { id: 5, name: 'Kitty', age: 4, breed: 'British Shorthair' },
-    { id: 6, name: 'Luna', age: 2, breed: 'Ragdoll' },
-    { id: 7, name: 'Oliver', age: 3, breed: 'Sphynx' },
-    { id: 8, name: 'Leo', age: 6, breed: 'Bengal' },
-    { id: 9, name: 'Chloe', age: 2, breed: 'Scottish Fold' },
-    { id: 10, name: 'Daisy', age: 1, breed: 'Norwegian Forest' },];
+  private readonly cats: Cat[] = [  { id: 1, name: 'Whiskers', description: 2, actions: 'Siamese' },
+    { id: 2, name: 'Tom', description: 3, actions: 'Persian' },
+    { id: 3, name: 'Garfield', description: 5, actions: 'Tabby' },
+    { id: 4, name: 'Bella', description: 1, actions: 'Maine Coon' },
+    { id: 5, name: 'Kitty', description: 4, actions: 'British Shorthair' },
+    { id: 6, name: 'Luna', description: 2, actions: 'Ragdoll' },
+    { id: 7, name: 'Oliver', description: 3, actions: 'Sphynx' },
+    { id: 8, name: 'Leo', description: 6, actions: 'Bengal' },
+    { id: 9, name: 'Chloe', description: 2, actions: 'Scottish Fold' },
+    { id: 10, name: 'Daisy', description: 1, actions: 'Norwegian Forest' },];
 
   create(createCatDto: CreateCatDto) {
     const newCat: Cat = {
@@ -28,7 +29,6 @@ export class CatsService {
     return this.cats;
   }
 
-
   findOne(id: number): Cat {
     const cat = this.cats.find(cat => cat.id === id);
     if (!cat) {
@@ -36,7 +36,6 @@ export class CatsService {
     }
     return cat;
   }
-
 
   update(id: number, updateCatDto: UpdateCatDto): Cat {
     const catId = this.cats.findIndex(cat => cat.id === id);
@@ -50,7 +49,6 @@ export class CatsService {
     this.cats[catId] = updatedCat;
     return updatedCat;
   }
-
 
   remove(id: number): void {
     const catId = this.cats.findIndex(cat => cat.id === id);
