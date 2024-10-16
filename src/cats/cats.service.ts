@@ -1,59 +1,90 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, BadRequestException, NotFoundException, InternalServerErrorException } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { CreateCatDto, UpdateCatDto } from './dto/create-cat.dto';
 
 @Injectable()
 export class CatsService {
   constructor(private readonly prisma: PrismaService) {}
-  
 
   async create(createCatDto: CreateCatDto) {
-    return this.prisma.cat.create({
-      data: createCatDto,
-    });
+    try {
+      // Create a new cat in the database
+      return await this.prisma.cat.create({
+        data: createCatDto,
+      });
+    } catch (error) {
+      // Handle Prisma-specific error codes
+      if (error.code === 'P2002') {
+        throw new BadRequestException('A cat with this name already exists.');
+      }
+      // For any other errors, throw a generic error
+      throw new InternalServerErrorException('Failed to create the cat.');
+    }
   }
 
   async findAll() {
-    return this.prisma.cat.findMany();
+    try {
+      return await this.prisma.cat.findMany();
+    } catch (error) {
+      throw new InternalServerErrorException('Failed to fetch cats.');
+    }
   }
 
   async findOne(id: number) {
-    const cat = await this.prisma.cat.findUnique({
-      where: { id },
-    });
-    if (!cat) {
-      throw new NotFoundException(`Cat with ID ${id} not found`);
+    try {
+      const cat = await this.prisma.cat.findUnique({
+        where: { id },
+      });
+      if (!cat) {
+        throw new NotFoundException(`Cat with ID ${id} not found`);
+      }
+      return cat;
+    } catch (error) {
+      throw new InternalServerErrorException('Failed to find the cat.');
     }
-    return cat;
   }
 
   async update(id: number, updateCatDto: UpdateCatDto) {
-    const cat = await this.prisma.cat.findUnique({
-      where: { id },
-    });
-    if (!cat) {
-      throw new NotFoundException(`Cat with ID ${id} not found`);
+    try {
+      const cat = await this.prisma.cat.findUnique({
+        where: { id },
+      });
+      if (!cat) {
+        throw new NotFoundException(`Cat with ID ${id} not found`);
+      }
+      return await this.prisma.cat.update({
+        where: { id },
+        data: updateCatDto,
+      });
+    } catch (error) {
+      if (error.code === 'P2025') {
+        // P2025 is the code for record not found
+        throw new NotFoundException(`Cat with ID ${id} not found`);
+      }
+      throw new InternalServerErrorException('Failed to update the cat.');
     }
-
-    return this.prisma.cat.update({
-      where: { id },
-      data: updateCatDto,
-    });
   }
 
   async remove(id: number): Promise<void> {
-    const cat = await this.prisma.cat.findUnique({
-      where: { id },
-    });
-    if (!cat) {
-      throw new NotFoundException(`Cat with ID ${id} not found`);
+    try {
+      const cat = await this.prisma.cat.findUnique({
+        where: { id },
+      });
+      if (!cat) {
+        throw new NotFoundException(`Cat with ID ${id} not found`);
+      }
+      await this.prisma.cat.delete({
+        where: { id },
+      });
+    } catch (error) {
+      if (error.code === 'P2025') {
+        throw new NotFoundException(`Cat with ID ${id} not found`);
+      }
+      throw new InternalServerErrorException('Failed to delete the cat.');
     }
-
-    await this.prisma.cat.delete({
-      where: { id },
-    });
   }
 }
+
 
 
 

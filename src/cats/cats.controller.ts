@@ -6,6 +6,8 @@ import { CatsService } from './cats.service';
 export class CatsController {
   constructor(private readonly catsService: CatsService) {}
 
+
+  
   @Post()
   create(@Body() createCatDto: CreateCatDto) {
     return this.catsService.create(createCatDto);

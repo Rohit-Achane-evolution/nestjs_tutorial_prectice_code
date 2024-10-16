@@ -10,4 +10,6 @@ import { PrismaService } from '../prisma/prisma.service';
   controllers: [AppController,CatsController],
   providers: [AppService,CatsService,PrismaService],
 })
-export class AppModule {}
+export class AppModule {
+  
+}
