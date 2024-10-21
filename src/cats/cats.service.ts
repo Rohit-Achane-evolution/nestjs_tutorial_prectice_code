@@ -1,13 +1,15 @@
-import { Injectable, BadRequestException, NotFoundException, InternalServerErrorException } from '@nestjs/common';
+import { Injectable, BadRequestException, NotFoundException, InternalServerErrorException, Logger } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { CreateCatDto, UpdateCatDto } from './dto/create-cat.dto';
+import { Cron } from '@nestjs/schedule';
 
 @Injectable()
 export class CatsService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) { }
 
   async create(createCatDto: CreateCatDto) {
     try {
+
       // Create a new cat in the database
       return await this.prisma.cat.create({
         data: createCatDto,
